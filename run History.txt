@@ -1,0 +1,850 @@
+																LZ004952090CN	
+
+tdomcatttor
+000401102	
+
+
+test.sh 	main_old.py		train critic for the first time
+test2.sh 	main.py 		train actor based on critic
+train.sh 	main2.py		train critic again
+main3.py is with random actions
+
+																			*** No phrase information ***
+
+																	test 		valid	
+																	----		-----						
+ID LSTM trained with just critic 								 	84.33		86.4        
+plain Infersent Epoch with max dev:9				 				85.34		??.?
+
+
+
+
+																				*** Phrase Information ***
+
+
+self.enc_lstm.flatten_parameters()
+sent_output = self.enc_lstm(sent)[0]
+self.phrase_lstm.flatten_parameters()
+sent_output = self.phrase_lstm(sent_output)[0]
+then max pooling, 100 epochs, shrink factor 0.99												 	66.23		67.8			
+          
+
+
+sent_output = self.enc_lstm(sent)[0]
+sent_output = self.phrase_lstm(torch.tanh(sent_output))[0]
+then maxpool, nothing before or after																76.84	 	78.0
+          
+
+																									test  		valid
+																									---- 		-----
+
+model_cr1		Same lstm, then maxpool																74.81		75.2								
+model_cr2		Same lstm, then last one as summary													70.55		72.0
+model_test 		two lstm, attention as summary , no tanh after the first lstm 						78.40		79.0
+model_test2 	two lstm, attention as summary , tanh after the first lstm 							78.26 		79.8	
+model_test3 	two lstm, maxpool as summary , 	 tanh after the first lstm
+model_test4	 	two lstm, last one as summary ,  tanh after the first lstm
+
+
+BS 5 epoch 200																						
+model test  5 new implementation with GRU, last one as summary, index select, lr 0.01				80.37	 	81.4	
+model test  7 new implementation with GRU, last one as summary, index select, lr 0.05				81.35		83.2		184252f9c1474e78b9d2b1297aa6d52c
+model test 11 new implementation with GRU, last one as summary, index select, lr 0.10				82.75		83.8		a8980d41cdac498d8c5a6107372eddf4
+
+tried with batch size 10, 15 and 20. but nothing changed, starting LR fixed all the time as 0.01	??.??		56.4		always
+			
+
+model  6 new implementation with LSTM, last one as summary, index select 0.01 LR, 					??.?		56.4	
+model 15 new implementation with LSTM, last one as summary, index select 0.05 LR,					79.40		79.6
+model 14 new implementation with LSTM, last one as summary, index select 0.10 lr,					80.05		80.2
+
+model 8  new implementation with GRU, max pool as summary, lr 0.01, BS 5, dim 300					80.82	 	82.2		1197fad0bad144e88ff9c703da30fbd0
+model 12 new implementation with GRU, max pool as summary, lr 0.05, BS 5, dim 300					82.20		84.6		f9abef8cd06e4b2fa8fa980b55b3baaa
+model 13 new implementation with GRU, max pool as summary, lr 0.10, BS 5, dim 300					83.54		85.4		6eb41a4af7ca41b9b2bd14d5533929ab
+
+model 16 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 300					83.26		85.0
+model 17 new implementation with GRU, max pool as summary, lr 0.20, BS 5, dim 300					82.30		86.0
+
+model 18 new implementation with GRU, max pool as summary, lr 0.10, BS 5, dim 500					83.40		74.66
+model 19 new implementation with GRU, max pool as summary, lr 0.10, BS 5, dim 700					82.99 		84.2	
+
+model 20 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 500 					83.80 		84.0
+model 21 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 700					83.88		85.4
+
+model 23 new implementation with GRU, max pool as summary, lr 0.20, BS 5, dim 500					83.36 		83.6
+model 22 new implementation with GRU, max pool as summary, lr 0.20, BS 5, dim 700 					83.34		84.0
+
+model 14 new implementation with GRU, max pool as summary, lr 0.1, BS 10, dim 300					80.47		83.0
+model 15 new implementation with GRU, max pool as summary, lr 0.1, BS 15, dim 300					80.76		82.6
+
+
+
+model test 24 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 750				83.72		84.0
+model test 25 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 800				83.66		84.8
+model test 26 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 850				83.86		83.6
+model test 27 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 900				83.44		83.8
+model test 28 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 950				83.70		84.0
+model test 29 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 1000				83.74		74.4
+model test 30 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 1050				83.78		83.8
+model test 31 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 1100				82.85		85.4
+model test 32 new implementation with GRU, max pool as summary, lr 0.15, BS 5, dim 1024				83.82		85.6
+
+
+
+model test 63 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.02		cc  				83.26		86.0 -
+model test 64 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.08							83.56		85.6 -
+model test 51 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.04							82.73		84.6 -	
+model test 52 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.06							83.74		85.0 -
+model test 41 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.10							83.40		84.8 -
+model test 42 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.12							83.01		85.0 -
+model test 43 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.14							83.86		84.8 -
+model test 44 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.16							83.74		85.6 -
+model test 53 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.15		bob 0				83.36		86.0 -
+model test 54 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.155		bob 0				84.01		86.2 -
+model test 55 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.165		bob 0				83.84		85.0 -
+model test 56 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.17		bob 1				82.95		85.8 -
+model test 57 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.175		bob 1				84.09		85.8 -
+model test 58 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.18		bob 1				83.26		85.0 -
+model test 59 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.185		bob 1				84.11		85.6 -
+model test 60 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.19		bob 1				83.93		85.2 -
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.195		vector				84.43		85.4 - ***
+model test 62 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.2		vector				83.95		86.2 -
+model test 65 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.205		bob 1				84.33		85.6 -	
+model test 66 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.21		bob 1				83.64		85.5 -
+model test 67 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.215		bob 1				84.29		84.6 -	
+model test 68 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.22		bob 1				82.85		85.2 -	
+model test 69 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.225		bob 1				83.93		85.2 -
+model test 70 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.23		cc					83.50		85.8 -
+model test 71 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.235		bob 0				83.28		86.6 -	
+model test 72 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.24		bob 0				83.97		85.6 -	
+model test 73 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.245		vector				83.21		85.4 -	
+model test 74 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.25		vector				83.93		85.8 -
+model test 75 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.255		vector				82.10		85.6 -	
+model test 76 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.26		vector				83.76		85.4 -
+
+
+sicke2/
+model test 1 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.1		cc		84.23	84.6
+model test 2 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.11	cc 		83.72	85.2
+model test 11 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.20	cc	
+
+model test 3 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.12	2		84.19	85.2	
+model test 4 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.13	2		84.23	85.8	
+model test 5 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.14	2		84.15	85.6	
+model test 6 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.15	2		84.09	86.4
+
+model test 7 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.16	1		84.37	85.8	
+model test 8 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.17	1		82.87	85.0
+model test 9 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.18	1		84.53	85.2	****
+model test 10 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.19	1		84.13	86.8
+
+
+
+LSTM + attention
+
+model test 33 LSTM + attention, max pool as summary, lr 0.1, BS 5, dim 600							76.76	81.0
+model test 34 LSTM + attention, max pool as summary, lr 0.13, BS 5, dim 600							78.43	79.0	test
+																									78.08	76.4	console	
+model test 35 LSTM + attention, max pool as summary, lr 0.15, BS 5, dim 600							77.82	81.2	
+																									77.69	79.8	
+model test 36 LSTM + attention, max pool as summary, lr 0.175, BS 5, dim 600						78.77	81.6	
+																									79.16	79.4	
+
+
+Actor Training
+--------------
+
+####	experiment with model 60 				Bob 1 												Finished
+
+test acc: 83.93		valid acc:85.2		just train critic
+test acc: 80.39		valid acc:??.?? 	train actor based on critic
+test acc: 84.21		valid acc:??.??		jointly train actor and critic
+
+lossL = (1 * _x + 0.1 / _x - 0.6)
+lossR = (1 * _y + 0.1 / _y - 0.6)
+loss_ =  float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)
+removed another level of randomness
+390/4927 samples have phrase structure changed
+
+
+	
+####	experiment with model 61				last stage running on Bob 2, 						Finished
+
+test acc: 84.43		valid acc: 85.4		just train critic
+test acc: 81.63		valid acc: 83.4		train actor based on critic
+test acc: 84.35		valid acc: 86.0		jointly train actor and critic
+
+lossL = (( _x + (1/_x) * 0.25) - 1.0)
+lossR = (( _y + (1/_y) * 0.25) - 1.0)
+loss_ =  float(float(loss_) + lossL + lossR) #((lossL + lossR)/2) * 0.1 * params.n_classes)
+added another level of randomness
+
+
+####	experiment with model 61				last stage running on Bob 2, 						Finished			
+
+test acc: 84.43		valid acc: 85.4		just train critic
+test acc: 81.63		valid acc: 83.4		train actor based on critic
+test acc: 84.39		valid acc: 86.4		jointly train actor and critic
+test acc: 84.29		valid acc: 85.4		train critic freeze Actor 			0.15		0.1
+
+lossL = (( _x + (1/_x) * 0.25) - 1.0)
+lossR = (( _y + (1/_y) * 0.25) - 1.0)	
+loss_ = float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)							running
+added another level of randomness
+																									
+
+
+
+####	experiment with model 61				Bob1		Running		Bob2 LR 0.05				Finished
+
+test acc: 84.43		valid acc: 85.4		just train critic
+test acc: 79.44		valid acc: 81.4		train actor based on critic			0.15		0.1
+test acc: 77.45		valid acc: 82.4		train actor based on critic			0.15		0.05
+
+test acc: 83.82		valid acc: 85.8		jointly train actor and critic		0.15		0.1
+test acc: 83.93		valid acc: 86.8		jointly train actor and critic		0.15		0.05
+
+test acc: 82.85		valid acc: 84.8		train critic freeze Actor 			0.15		0.1
+test acc: 82.83		valid acc: 84.6		train critic freeze Actor 			0.05		0.1
+
+lossL = (( _x + (1/_x) * 0.25) - 1.0)
+lossR = (( _y + (1/_y) * 0.25) - 1.0)
+loss_ = float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)					running on 1(.15) and 2(.05)
+removed another level of randomness
+
+
+
+
+
+####	experiment with model 61 				Running on Bob 1: stage 2 and 3, Finished			Finished
+
+test acc: 84.43		valid acc:85.40		just train critic
+test acc: 81.80		valid acc:78.85	 	train actor based on critic
+test acc: 82.93		valid acc:85.00		jointly train actor and critic
+
+lossL = (1 * _x + 0.1 / _x)
+lossR = (1 * _y + 0.1 / _y)
+loss_ =  float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)
+added another level of randomness
+
+
+
+####	experiment with model 61 				Running on Computecanada: stage 2 and 3				Finished
+
+test acc: 84.43		valid acc:85.4		just train critic
+test acc: 79.58		valid acc:80.6	 	train actor based on critic
+test acc: 83.50		valid acc:85.0		jointly train actor and critic
+
+lossL = (1 * _x + 0.1 / _x)
+lossR = (1 * _y + 0.1 / _y)
+loss_ =  float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)
+removed another level of randomness
+filenames are errorfile1 and outfile1
+model names have underscore at the end _
+
+
+
+####	experiment with model 61 				Running on Computecanada: stage 2 and 3				Finished
+
+test acc: 84.43		valid acc:85.4		just train critic
+test acc: 78.79		valid acc:83.0	 	train actor based on critic
+test acc: 83.46		valid acc:85.8		jointly train actor and critic
+
+lossL = (1 * _x + 0.1 / _x - 0.6)
+lossR = (1 * _y + 0.1 / _y - 0.6)
+loss_ =  float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)
+added another level of randomness
+filenames are errorfile and outfile
+
+
+
+####	experiment with model 61 				Running on Bob 1									Finished
+
+test acc: 84.43		valid acc:85.4		just train critic
+test acc: 81.92		valid acc:82.8	 	train actor based on critic
+test acc: 83.52		valid acc:85.8		jointly train actor and critic
+test acc: 84.74		valid acc:85.8		train critic freeze Actor 			0.15		0.1
+test acc: 84.39		valid acc:86.0		train critic freeze Actor 			0.10		0.1		----1, ----1
+test acc: 84.55		valid acc:85.4		train critic freeze Actor 			0.05		0.1		__, ___
+test acc: 83.99		valid acc:85.6		train critic freeze Actor 			0.02		0.1		___, ____
+test acc: 84.55		valid acc:86.2		train critic freeze Actor 			0.20		0.1		___, ____
+
+lossL = (1 * _x + 0.1 / _x - 0.6)
+lossR = (1 * _y + 0.1 / _y - 0.6)
+loss_ =  float(float(loss_) + ((lossL + lossR)/2) * 0.1 * params.n_classes)
+removed another level of randomness
+model names have underscore at the end __															
+
+
+
+test acc: 84.43		valid acc: 85.4		just train critic					0.15					model_test61
+test acc: 80.05		valid acc: 83.2	 	train actor based on critic						0.1			model_actor61
+test acc: 83.30		valid acc: 86.0		train critic freeze actor			0.14					model_test61New14
+test acc: 83.76		valid acc: 86.0		train critic freeze Actor			0.15	random once		model_test61New15
+test acc: 83.76		valid acc: 86.0		train critic freeze Actor			0.15	random twice	model_test61New15_
+test acc: 83.46		valid acc: 87.2		jointly train actor and critic		0.15		0.1			model_test61New152
+
+
+
+test acc: 84.53		valid acc: 85.2		just train critic					0.15					model_test9
+test acc: 80.58		valid acc: 80.8	 	train actor based on critic						0.1			model_actor9
+test acc: 82.99		valid acc: 83.8		train critic freeze actor			0.14					model_test9New14
+test acc: 83.09		valid acc: 84.4		train critic freeze Actor			0.15					model_test9New15
+
+
+train the 81.9 model 
+with and without freezing actor
+and save the model at each step
+
+
+freeze actor and train critic: change the LR
+
+('29', '83.17')
+('31', '83.32')
+('21', '83.42')
+('28', '83.52')
+('40', '83.6')
+('48', '83.66')
+('46', '83.76')
+('18', '83.78')
+('44', '83.8')
+('4', '83.82')
+('33', '83.84')
+('13', '83.86')
+('5', '83.95')
+('12', '83.99')
+('14', '83.99')
+('15', '83.99')
+('6', '84.03')
+('26', '84.07')
+('8', '84.07')
+('20', '84.11')
+('19', '84.13')
+('38', '84.15')
+('10', '84.17')
+('16', '84.19')
+('45', '84.21')
+('42', '84.23')
+('11', '84.25')
+('41', '84.27')
+('7', '84.27')
+('9', '84.29')
+('50', '84.31')
+('17', '84.33')
+('47', '84.41')
+('49', '84.43')
+('35', '84.47')
+('22_', '84.47')
+('22', '84.47')
+('36', '84.47')
+('32', '84.49')
+('34', '84.49')
+('27', '84.6')
+('37', '84.7')
+('30', '84.74')
+('39', '84.76')
+('43', '85.1')
+
+savedir/sicke/sicke_critic
+critic 	- model_test61.pickle
+actor  	- model_actor61.pickle
+critic2 - model_test61_43.pickle
+
+
+train both actor and critic: change the LR
+
+('New2', '81.55')
+('New3', '82.2')
+('New9', '82.65')
+('New7', '82.83')
+('New12', '82.87')
+('New4', '83.13')
+('New16', '83.17')
+('New18', '83.3')
+('New43', '83.34')
+('New42', '83.42')
+('New19', '83.46')
+('New8', '83.46')
+('New17', '83.48')
+('New48', '83.52')
+('New1', '83.6')
+('New24', '83.62')
+('New28', '83.62')
+('New21', '83.64')
+('New31', '83.7')
+('New39', '83.7')
+('New44', '83.74')
+('New14', '83.74')
+('New46', '83.76')
+('New45', '83.82')
+('New41', '83.86')
+('New32', '83.88')
+('New30', '83.93')
+('New15', '84.01')
+('New34', '84.15')
+('New11', '84.15')
+('New25', '84.23')
+('New23', '84.23')
+('New35', '84.29')
+('New10', '84.31')
+('New5', '84.33')
+('New26', '84.35')
+('New27', '84.37')
+('New38', '84.39')
+('New47', '84.41')
+('New37', '84.62')
+('New40', '84.62')
+('New6', '84.68')
+('New36', '84.84')
+('New13', '84.84')
+('New22', '84.86')
+('New33', '84.9')
+('New29', '84.9')
+
+savedir/sicke/sicke_actor_critic
+critic 	- model_test61.pickle
+actor  	- model_actor61New_29.pickle
+critic2 - model_test61New_29.pickle
+
+******************** MSRP **********************
+
+sequence of tuning
+- LR
+- dim
+- dropout
+
+19, 1-4 Bob1
+41-44 cedar
+45-50 graham
+6-10 graham
+21-40 graham
+
+LR 
+
+.01		 71.13
+.02		 72.40
+.03		 73.13
+.04		 72.52
+(05, 51, 73.24, 22)
+(06, 43, 73.63, 42)
+(07, 44, 73.85, 41)
+(08, 44, 74.07, 38)
+(09, 44, 74.29, 38)
+(10, 44, 74.13, 29)
+(11, 51, 73.90, 34)
+(12, 51, 74.40, 29)
+(13, 51, 74.01, 21)
+(14, 51, 74.13, 38)
+(15, 51, 74.46, 17)
+(16, 51, 74.18, 11)
+(17, 51, 73.85, 22)
+(18, 51, 73.85, 31)
+.19		 74.53
+(20, 51, 74.13, 11)
+(21, 44, 74.68, 36)
+(22, 43, 74.85, 21)
+(23, 45, 75.01, 42) 74.96 700D
+(24, 43, 74.63, 11)
+(25, 44, 74.18, 34)
+(26, 44, 74.63, 41)
+(27, 42, 74.46, 9)
+(28, 43, 74.57, 38)
+(29, 42, 74.24, 40)
+(30, 44, 73.74, 23)
+(31, 43, 73.57, 21)
+(32, 44, 74.18, 29)
+(33, 44, 73.85, 19)
+(34, 43, 74.63, 11)
+(35, 44, 73.35, 11)
+(36, 42, 73.79, 27)
+(37, 44, 73.51, 35)
+(38, 43, 73.01, 11)
+(39, 43, 73.40, 26)
+(40, 43, 74.13, 41)
+(41, 51, 73.57, 30)
+(42, 51, 73.51, 38)
+(43, 51, 73.24, 41)
+(44, 51, 73.35, 11)
+(45, 45, 73.63, 11)
+(46, 44, 74.13, 12)
+(47, 43, 74.13, 38)
+(48, 42, 74.13, 30)
+(49, 43, 73.40, 39)
+(50, 43, 74.51, 17)
+
+700D was not fitting in the memory for the actor training.
+trained 4 more models with LR 0.23
+500 - 73.96 1
+550 - 75.01 2
+600 - 75.07 3 ***
+650 - 74.74 4
+
+2nd phase - Train Actor and Freeze Critic
+
+Best - 73.35 LR 0.20 and 0.19
+
+Freeze actor train critic, all on cedar, Model 2-50, still running, tuning the LR
+
+(2, 52, 73.68, 28)
+(3, 52, 73.46, 18)
+(4, 52, 73.57, 13)
+(5, 52, 73.4, 8)
+(6, 52, 73.4, 45)
+(7, 52, 73.74, 28)
+(8, 52, 73.63, 28)
+(9, 52, 73.85, 46)
+(10, 52, 73.74, 23)
+(11, 52, 73.85, 40)
+(12, 52, 74.07, 46)
+(13, 52, 74.07, 28)
+(14, 52, 73.96, 14)
+(15, 52, 73.96, 40)
+(16, 52, 73.96, 28)
+(17, 52, 74.29, 40)
+(18, 52, 74.01, 14)
+(19, 52, 73.85, 37)
+(20, 52, 73.79, 44)
+(21, 52, 74.18, 19)
+(22, 52, 73.9, 1)
+(23, 52, 73.85, 19)
+(24, 52, 73.79, 22)
+(25, 52, 74.07, 22)
+(26, 52, 73.85, 9)
+(27, 52, 74.07, 9)
+(28, 52, 74.07, 14)
+(29, 52, 73.85, 14)
+(30, 52, 73.96, 9)
+(31, 52, 74.01, 44)
+(32, 52, 74.57, 9)
+(33, 52, 73.68, 28)
+(34, 52, 74.13, 28)
+(35, 52, 73.85, 48)
+(36, 52, 74.24, 16)
+(37, 52, 73.9, 35)
+(38, 52, 74.24, 39)
+(39, 52, 74.07, 44)
+(40, 52, 74.01, 25)
+(41, 52, 74.51, 22)
+(42, 52, 74.68, 28)
+(43, 52, 74.29, 39)
+(44, 52, 74.57, 41)
+(45, 52, 74.18, 23)
+(46, 52, 74.13, 16)
+(47, 52, 74.29, 9)
+(48, 52, 73.9, 12)
+(49, 52, 74.24, 36)
+(50, 52, 75.07, 23)
+
+LR  .50 is best. Now tuning on dropout fc with LR 0.50, running on Cedar
+
+critic 	- model_test23.pickle
+actor  	- model_actor23_20.pickle
+critic2 - model_test23_275.pickle
+
+
+***************AIgrade8 dataset****************
+
+First Train the Critic with 650D hidden dim and learn a bunch of models with different learning rate.
+All the models ran for max 34 epochs, dropout 0.195
+
+3	74.53
+4	74.11
+5	74.37
+6	73.69
+7	72.37
+8	74.73
+9	71.92
+10	74.74 ****
+11	74.73
+12	74.73
+13	74.73
+14	74.73
+15	74.71
+16	74.25
+17	74.73
+18	74.73
+19	74.73
+20	74.73
+21	74.73
+22	74.73
+23	74.73
+24	74.73
+25	74.73
+26	74.73
+27	74.73
+28	74.73
+29	74.73
+30	74.73
+31	74.73
+32	74.73
+33	74.73
+34	74.73
+35	74.73
+36	74.73
+37	74.73
+38	74.73
+39	74.73
+40	74.73
+41	74.13
+42	74.09
+43	74.15
+44	74.08
+45	74.1
+46	73.99
+47	73.97
+48	74.0
+49	73.99
+50	73.96
+
+Have to train few models again as the actor training is not fitting in the memory
+
+300 - 1
+340 - 2
+380 - 3
+420 - 4
+460 - 5
+500 - 6
+540 - 7
+
+we chose to work with 400D
+Train again varying LR- every other models were giving 74.73. We chose the model with LR .13 as it was 74.69.
+second best. 
+
+Now Train again by varying dropout
+
+('42', '74.67')
+('43', '74.68')
+('35', '74.68')
+('38', '74.68')
+('45', '74.69')
+('19', '74.69')
+('21', '74.69')
+('20', '74.69')
+('37', '74.69')
+('49', '74.69')
+('33', '74.7')
+('18', '74.7')
+('25', '74.7')
+('17', '74.7')
+('44', '74.71')
+('50', '74.71')
+('41', '74.71')
+('40', '74.71')
+('27', '74.71')
+('26', '74.71')
+('30', '74.71')
+('24', '74.71')
+('9', '74.71')
+('34', '74.71')
+('22', '74.71')
+('15', '74.71')
+('16', '74.71')
+('46', '74.72')
+('32', '74.72')
+('31', '74.72')
+('36', '74.72')
+('23', '74.72')
+('28', '74.72')
+('14', '74.72')
+('29', '74.72')
+('48', '74.72')
+('47', '74.73')
+('13', '74.73')
+('39', '74.73')
+('12', '74.74')
+('11', '74.74')
+('10', '74.74') ***  critic selected
+
+Now we can work with model with 400D, LR 0.13 and dropout 0.10
+
+Next phase is to train the actor.....
+
+model_actor_1.pickle	74.76
+model_actor_10.pickle	74.76
+model_actor_11.pickle	74.73
+model_actor_12.pickle	74.76
+model_actor_13.pickle	74.76
+model_actor_14.pickle	74.73
+model_actor_15.pickle	74.73
+model_actor_16.pickle	74.75
+model_actor_17.pickle	74.74
+model_actor_18.pickle	74.72
+model_actor_19.pickle	74.72
+model_actor_2.pickle	74.76
+model_actor_20.pickle	74.72
+model_actor_21.pickle	74.73
+model_actor_22.pickle	74.72
+model_actor_23.pickle	74.74
+model_actor_24.pickle	74.77
+model_actor_25.pickle	74.72
+model_actor_26.pickle	74.74
+model_actor_27.pickle	74.76
+model_actor_28.pickle	74.76
+model_actor_29.pickle	74.72
+model_actor_3.pickle	74.76
+model_actor_30.pickle	74.73
+model_actor_31.pickle	74.74
+model_actor_32.pickle	74.76
+model_actor_33.pickle	74.7
+model_actor_34.pickle	74.74
+model_actor_35.pickle	74.72
+model_actor_36.pickle	74.74
+model_actor_37.pickle	74.74
+model_actor_39.pickle	74.72
+model_actor_4.pickle	74.76
+model_actor_40.pickle	74.71
+model_actor_41.pickle	74.72
+model_actor_42.pickle	74.72
+model_actor_43.pickle	74.72
+model_actor_44.pickle	74.76
+model_actor_45.pickle	74.74
+model_actor_46.pickle	74.72
+model_actor_47.pickle	74.76
+model_actor_48.pickle	74.72
+model_actor_49.pickle	74.72
+model_actor_5.pickle	74.77
+model_actor_50.pickle	74.73
+model_actor_6.pickle	74.76
+model_actor_7.pickle	74.75
+model_actor_8.pickle	74.78 *** actor selected
+model_actor_9.pickle	74.76
+
+Next phase is to train the critic again... varying the LR
+
+model_test10_1.pickle	74.55
+model_test10_10.pickle	74.29
+model_test10_11.pickle	74.23
+model_test10_12.pickle	74.16
+model_test10_13.pickle	74.15
+model_test10_14.pickle	74.18
+model_test10_15.pickle	74.16
+model_test10_16.pickle	74.16
+model_test10_17.pickle	74.54
+model_test10_18.pickle	74.54
+model_test10_19.pickle	74.49
+model_test10_2.pickle	74.51
+model_test10_20.pickle	74.49
+model_test10_21.pickle	74.46
+model_test10_22.pickle	74.46
+model_test10_23.pickle	74.46
+model_test10_24.pickle	74.42
+model_test10_25.pickle	74.35
+model_test10_26.pickle	74.42
+model_test10_27.pickle	74.41
+model_test10_28.pickle	74.57
+model_test10_29.pickle	74.61 **** LR 0.29 selected
+model_test10_3.pickle	74.5
+model_test10_30.pickle	74.59
+model_test10_31.pickle	74.56
+model_test10_32.pickle	74.6
+model_test10_33.pickle	74.57
+model_test10_34.pickle	74.58
+model_test10_35.pickle	74.59
+model_test10_36.pickle	74.56
+model_test10_37.pickle	74.55
+model_test10_38.pickle	74.56
+model_test10_39.pickle	74.53
+model_test10_4.pickle	74.4
+model_test10_40.pickle	74.49
+model_test10_41.pickle	74.47
+model_test10_42.pickle	74.51
+model_test10_43.pickle	74.48
+model_test10_44.pickle	74.44
+model_test10_45.pickle	74.44
+model_test10_46.pickle	74.42
+model_test10_47.pickle	74.41
+model_test10_48.pickle	74.43
+model_test10_49.pickle	74.38
+model_test10_5.pickle	74.48
+model_test10_50.pickle	74.55
+model_test10_6.pickle	74.45
+model_test10_7.pickle	74.36
+model_test10_8.pickle	74.33
+model_test10_9.pickle	74.31
+
+Next stage is to train using different dropout
+
+critic 	- model_test10.pickle
+actor  	- model_actor_8.pickle
+critic2 - model_test10_??.pickle
+
+
+
+-------------------------------------------
+|Experiment with initial phrases as all 1s|
+-------------------------------------------
+
+																									test 		valid
+model test 56 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.17							85.0		86.6		82.12		84.0 	trained with softmax
+model test 57 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.175							84.62		86.2		82.91		84.4			''
+model test 58 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.18							84.88		87.0		82.63		84.0			''
+model test 59 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.185							84.35		86.4		82.38		84.0			''
+model test 60 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.19							83.99		86.8		80.07		83.0			''
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.195							84.66		86.6 		82.06		83.0			''
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.200							84.57		86.2		81.88		84.6			''
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.205							84.21		87.4		82.34		83.2			''
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.210							85.02		87.2 ***	81.35		82.6			''
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.215							84.80		88.0		82.36		83.6			''
+
+
+Train Just Actor
+
+all the models were giving 87.2% validation accuracy, So we selected the one with LR 0.10
+
+Validation Accuracy: 87.2
+
+Train Critic based on Actor with learning rate 0.04
+
+valid  accuracy:  88.6
+88.6
+test  accuracy:  85.18
+85.18
+
+-------------------------------------------
+|Experiment with initial phrases as all 0s|
+-------------------------------------------
+
+model test 56 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.17							82.87		85.0	
+model test 57 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.175							83.74		85.6
+model test 58 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.18							84.53		85.2
+model test 59 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.185							83.68		87.2
+model test 60 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.19							84.13		86.8
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.195							83.64		86.6
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.200							84.35		85.8
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.205							84.68		85.8
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.210							83.26		84.4
+model test 61 GRU, max pool as summary, lr 0.15, BS 5, dim 700, drop 0.215							84.78		87.4 ***
+
+
+test accuracy in the last phase: 85.06
+
+Random experiment
+test: 		81.06
+test: 		82.77
+							good actor
+trigram		84.01
+fourgram 	82.95
+fivegram 	83.28
+sixgram  	82.12
+
+
+MSRP
+-----
+
+1s LR 0.23
+phras1	drop 0.17	75.18
+phase2	drop 0.22	75.29
+phase3
+
+0s LR 0.23
+phase1	drop 0.210	74.79
+phase2	drop 0.14	75.07
+phase3
+
+random		73.74
+random 		72.79
+
+trigram		74.63
+fourgram	75.01
+fivegram	75.01
+sixgram		75.01

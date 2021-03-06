@@ -1,0 +1,161 @@
+['The', 'quick', 'brown']
+fox
+['the', 'lazy']
+dog
+['dog']
+over
+['fox', 'over', '.']
+jumps
+model test 61 GRU, max pool as summary, lr 0.14, BS 5, dim 700, drop 0.195
+
+togrep : []
+
+Namespace(Newcriticmodelname='model_test61New15.pickle', actormodelname='model_actor61.pickle', batch_size=5, criticmodelname='model_test61.pickle', decay=0.99, dpout_fc=0.195, dpout_model=0.0, enc_lstm_dim=700, encoder_type='InferSent', fc_dim=512, gpu_id=0, lrshrink=1, max_norm=5.0, minlr=1e-05, n_classes=3, n_enc_layers=1, n_epochs=40, nlipath='dataset/SNLI/', nonlinear_fc=1, optimizer='sgd,lr=0.15', outputdir='savedir/sicke/', pool_type='max', seed=1234, word_emb_dim=300, word_emb_path='dataset/glove.840B.300d.txt')
+Found 2411(/2417) words with glove vectors
+Vocab size : 2411
+4500
+5000
+9927
+4500
+5000
+9927
+critic(
+  (active_pred): InferSent(
+    (rnn): GRU(300, 700, dropout=0.1)
+    (rnn2): GRU(700, 700, dropout=0.1)
+    (lin): Linear(in_features=700, out_features=700, bias=True)
+    (emb_att): EmbedAttention(
+      (att_w): Linear(in_features=700, out_features=1, bias=False)
+    )
+    (lin2): Linear(in_features=700, out_features=700, bias=True)
+    (emb_att2): EmbedAttention(
+      (att_w): Linear(in_features=700, out_features=1, bias=False)
+    )
+  )
+  (target_pred): InferSent(
+    (rnn): GRU(300, 700, dropout=0.1)
+    (rnn2): GRU(700, 700, dropout=0.1)
+    (lin): Linear(in_features=700, out_features=700, bias=True)
+    (emb_att): EmbedAttention(
+      (att_w): Linear(in_features=700, out_features=1, bias=False)
+    )
+    (lin2): Linear(in_features=700, out_features=700, bias=True)
+    (emb_att2): EmbedAttention(
+      (att_w): Linear(in_features=700, out_features=1, bias=False)
+    )
+  )
+  (active_classifier): Sequential(
+    (0): Dropout(p=0.195, inplace=False)
+    (1): Linear(in_features=2800, out_features=512, bias=True)
+    (2): Tanh()
+    (3): Dropout(p=0.195, inplace=False)
+    (4): Linear(in_features=512, out_features=512, bias=True)
+    (5): Tanh()
+    (6): Dropout(p=0.195, inplace=False)
+    (7): Linear(in_features=512, out_features=3, bias=True)
+  )
+  (target_classifier): Sequential(
+    (0): Dropout(p=0.195, inplace=False)
+    (1): Linear(in_features=2800, out_features=512, bias=True)
+    (2): Tanh()
+    (3): Dropout(p=0.195, inplace=False)
+    (4): Linear(in_features=512, out_features=512, bias=True)
+    (5): Tanh()
+    (6): Dropout(p=0.195, inplace=False)
+    (7): Linear(in_features=512, out_features=3, bias=True)
+  )
+)
+actor(
+  (target_policy): policyNet(
+    (W1): Linear(in_features=700, out_features=1, bias=False)
+    (W2): Linear(in_features=700, out_features=1, bias=False)
+    (W3): Linear(in_features=700, out_features=1, bias=True)
+  )
+  (active_policy): policyNet(
+    (W1): Linear(in_features=700, out_features=1, bias=False)
+    (W2): Linear(in_features=700, out_features=1, bias=False)
+    (W3): Linear(in_features=700, out_features=1, bias=True)
+  )
+)
+active_pred.rnn.weight_ih_l0
+active_pred.rnn.weight_hh_l0
+active_pred.rnn.bias_ih_l0
+active_pred.rnn.bias_hh_l0
+active_pred.rnn2.weight_ih_l0
+active_pred.rnn2.weight_hh_l0
+active_pred.rnn2.bias_ih_l0
+active_pred.rnn2.bias_hh_l0
+active_pred.lin.weight
+active_pred.lin.bias
+active_pred.emb_att.att_w.weight
+active_pred.lin2.weight
+active_pred.lin2.bias
+active_pred.emb_att2.att_w.weight
+target_pred.rnn.weight_ih_l0
+target_pred.rnn.weight_hh_l0
+target_pred.rnn.bias_ih_l0
+target_pred.rnn.bias_hh_l0
+target_pred.rnn2.weight_ih_l0
+target_pred.rnn2.weight_hh_l0
+target_pred.rnn2.bias_ih_l0
+target_pred.rnn2.bias_hh_l0
+target_pred.lin.weight
+target_pred.lin.bias
+target_pred.emb_att.att_w.weight
+target_pred.lin2.weight
+target_pred.lin2.bias
+target_pred.emb_att2.att_w.weight
+active_classifier.1.weight
+active_classifier.1.bias
+active_classifier.4.weight
+active_classifier.4.bias
+active_classifier.7.weight
+active_classifier.7.bias
+target_classifier.1.weight
+target_classifier.1.bias
+target_classifier.4.weight
+target_classifier.4.bias
+target_classifier.7.weight
+target_classifier.7.bias
+target_policy.W1.weight
+target_policy.W2.weight
+target_policy.W3.weight
+target_policy.W3.bias
+active_policy.W1.weight
+active_policy.W2.weight
+active_policy.W3.weight
+active_policy.W3.bias
+Just Critic Training......
+Just Critic Training......Done!
+
+Critic Loaded
+
+VALIDATION : Epoch 10000
+finalgrep : accuracy valid : 85.4
+85.4
+Actor Training......
+Actor Training......Done!
+
+Critic Loaded
+
+Actor Loaded
+
+VALIDATION : Epoch 10000
+Evaluating...  0
+Evaluating...  100
+Evaluating...  200
+Evaluating...  300
+Evaluating...  400
+valid  accuracy:  82.8
+82.8
+Again Critic Training......
+
+TRAINING : Epoch 1
+Actor Training
+Learning rate : 0.1
+Crtic Training
+Learning rate : 0.15
+245 ; loss 0.24 ; sentence/s 37 ; words/s 535 ; accuracy train : 89.6
+495 ; loss 0.14 ; sentence/s 37 ; words/s 550 ; accuracy train : 90.8
+745 ; loss 0.18 ; sentence/s 38 ; words/s 565 ; accuracy train : 89.87
+995 ; loss 0.18 ; sentence/s 39 ; words/s 558 ; accuracy train : 90.0
